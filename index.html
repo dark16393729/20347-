@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Selamat Ulang Tahun 💖</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Background Spektrum -->
+  <div class="background-animation"></div>
+
+  <!-- Music Player Simple -->
+  <div class="music-player">
+    <div class="music-info">
+      <span id="music-title">🎶 Best Part – Daniel Caesar ft. H.E.R</span>
+      <div class="music-controls">
+        <button onclick="prevSong()">⏮ </button>
+        <button onclick="nextSong()">⏭ </button>
+      </div>
+    </div>
+    <iframe id="music-frame" width="0" height="0"
+      src="https://www.youtube.com/embed/vBy7FaapGRo?autoplay=1&loop=1&playlist=vBy7FaapGRo"
+      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+    </iframe>
+  </div>
+
+  <!-- Page 1 -->
+  <div class="page" id="page1">
+    <h1>Hai umai 😌</h1>
+    <p>maaf ya aku belum bisa ngasih apa apa , jadi sementara ini dulu ya.. </p>
+    <button onclick="nextPage()">next</button>
+  </div>
+
+  <!-- Page 2 -->
+  <div class="page hidden" id="page2">
+    <h1>Selamat Ulang Tahun! 🎂</h1>
+    <p>
+      Selamat ulang tahun umai semoga panjang umur dan sehat selalu.<br/>
+      jujur aku ga bisa bikin kata kata hehehe maaf yaaa 💕<br/>
+      semoga kamu bisa capai tujuan yang kamu inginkan, dan semoga ga gampang pundung yaa hehe 🌸
+    </p>
+    <button onclick="nextPage()">Lanjut ➡️</button>
+  </div>
+
+  <!-- Page 3 -->
+  <div class="page hidden" id="page3">
+    <h1>Akhir Kata 💌</h1>
+    <p>
+      Happy Birthday sekali lagi, yaa. 💖
+    </p>
+    <button onclick="showSecret()">Lihat Pesan Rahasia 🔐</button>
+    <div id="secret-message" class="hidden">
+      <p>
+        Kalau kamu baca ini... berarti kamu orang yang spesial banget buatku.<br/>
+      </p>
+    </div>
+    <button onclick="restart()">restart 🔁</button>
+  </div>
+
+  <!-- Confetti JS -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
