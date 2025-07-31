@@ -2,229 +2,566 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Selamat Ulang Tahun 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selamat Ulang Tahun 🎉</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body, html {
-      font-family: 'Quicksand', sans-serif;
-      height: 100%;
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
+      animation: gerakGradien 10s ease infinite;
+      background-size: 400% 400%;
       overflow: hidden;
-      position: relative;
     }
-    .background-animation {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(270deg, #ffdde1, #ee9ca7, #ffdde1, #f6d365);
-      background-size: 800% 800%;
-      animation: gradientShift 20s ease infinite;
-      z-index: -1;
-    }
-    @keyframes gradientShift {
+
+    @keyframes gerakGradien {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    .page {
+
+    .halaman {
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       height: 100vh;
       text-align: center;
       padding: 2rem;
-      transition: opacity 1s ease;
     }
-    .page.hidden {
-      opacity: 0;
-      pointer-events: none;
-      position: absolute;
-    }
-    h1 {
-      font-size: 2.5em;
-      color: #e94e77;
-    }
-    p {
-      font-size: 1.2em;
-      color: #333;
-      max-width: 600px;
-    }
+
+    .sembunyi { display: none; }
+
     button {
-      margin-top: 1rem;
-      padding: 0.8rem 2rem;
-      font-size: 1em;
+      margin: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      font-size: 1.1em;
       background: #e94e77;
       color: white;
       border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background: #d7426d;
-    }
-    .hidden { display: none; }
-    #secret-message {
-      margin-top: 2rem;
-      background: #fff5f7;
-      padding: 1rem;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(233, 78, 119, 0.2);
-    }
-    .music-player {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 0.6rem 1rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      z-index: 10;
-    }
-    .music-info { display: flex; flex-direction: column; }
-    .music-controls { margin-top: 0.4rem; }
-    .music-controls button {
-      background: #e94e77;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      padding: 0.3rem 1rem;
-      margin-right: 8px;
       cursor: pointer;
-      font-size: 0.9em;
+      transition: background 0.3s ease;
     }
-    .music-controls button:hover { background: #d7426d; }
+
+    button:hover {
+      background: #d03e6e;
+    }
+
+    .stiker {
+      margin-top: 2rem;
+      font-size: 3rem;
+    }
+
+    .kotakTeks {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(255,255,255,0.4);
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      max-width: 90%;
+    }
+
+    #halamanPermainan {
+      position: relative;
+      background: transparent;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
+
+    #pesanPopup, #instruksiPopup {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(to bottom right, #ffb6c1, #e6e6fa);
+      padding: 2rem;
+      border: 4px solid #ff5555;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      text-align: center;
+      z-index: 10;
+      animation: fadeIn 0.5s ease-in;
+      max-width: 80%;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translate(-50%, -60%); }
+      100% { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    #panelDekorasi {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(139,69,19,0.7);
+      padding: 10px;
+      border-radius: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
-  <div class="background-animation"></div>
 
-  <div class="music-player">
-    <div class="music-info">
-      <span id="music-title">🎶 Just The Way You Are – Bruno Mars</span>
-    </div>
-    <div class="music-controls">
-      <button onclick="manualPlay()">🎵 Play Musik</button>
-      <button onclick="prevSong()">⏮️</button>
-      <button onclick="nextSong()">⏭️</button>
-    </div>
-    <iframe id="music-frame" width="0" height="0"
-      src="https://www.youtube.com/embed/vBy7FaapGRo?mute=1&loop=1&playlist=vBy7FaapGRo"
-      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-    </iframe>
+<!-- Halaman 1 -->
+<div class="halaman" id="halaman1">
+  <h1>Hai Umai 😌</h1>
+  <p>Maaf ya aku belum bisa ngasih apa-apa, jadi sementara ini dulu ya..</p>
+  <div class="stiker">🎁🎈💖</div>
+  <div class="kotakTeks">Hari ini hari kamuu 🎉</div>
+  <button id="tombolLanjut1" aria-label="Lanjut ke halaman berikutnya">Lanjut</button>
+</div>
+
+<!-- Halaman 2 -->
+<div class="halaman sembunyi" id="halaman2">
+  <h1>Selamat Ulang Tahun 🎂</h1>
+  <p>Semoga panjang umur, sehat selalu 🌸</p>
+  <div class="stiker">🎊🎂🥳</div>
+  <div class="kotakTeks">Semangat ya umai 😄</div>
+  <button id="tombolLanjut2" aria-label="Lanjut ke halaman berikutnya">Lanjut 🎉</button>
+</div>
+
+<!-- Halaman 3 -->
+<div class="halaman sembunyi" id="halaman3">
+  <h1>Ucapan Spesial 🎉</h1>
+  <p>Kalau kamu baca ini... berarti kamu orang yang spesial banget buatku 💌</p>
+  <p>Happy Birthday sekali lagi ya Umai 💖</p>
+  <div class="stiker">✨💝🎇</div>
+  <div class="kotakTeks">sehat sehat orang sehat 💕</div>
+  <button id="tombolMulai" aria-label="Mulai dekorasi kue">Dekorasi Kue 🍰</button>
+</div>
+
+<!-- Halaman Permainan -->
+<div id="halamanPermainan" class="sembunyi">
+  <canvas id="kanvasPermainan"></canvas>
+  <div id="panelDekorasi">
+    <button id="warnaMerah" aria-label="Pilih frosting merah">Frosting Merah</button>
+    <button id="warnaHijau" aria-label="Pilih frosting hijau">Frosting Hijau</button>
+    <button id="warnaBiru" aria-label="Pilih frosting biru">Frosting Biru</button>
+    <button id="taburanPermata" aria-label="Tambah taburan permata">Permata</button>
+    <button id="warnaToppingMerah" aria-label="Warna topping merah">Warna Topping Merah</button>
+    <button id="warnaToppingHijau" aria-label="Warna topping hijau">Warna Topping Hijau</button>
+    <button id="warnaToppingBiru" aria-label="Warna topping biru">Warna Topping Biru</button>
+    <button id="taburanBunga" aria-label="Tambah taburan bunga">Bunga</button>
+    <button id="taburanBintang" aria-label="Tambah taburan bintang">Bintang</button>
+    <button id="taburanChip" aria-label="Tambah taburan cokelat chip">Cokelat Chip</button>
+    <button id="lilin" aria-label="Tambah lilin">Lilin</button>
+    <button id="warnaLilinPutih" aria-label="Warna lilin putih">Warna Lilin Putih</button>
+    <button id="warnaLilinMerah" aria-label="Warna lilin merah">Warna Lilin Merah</button>
+    <button id="warnaLilinBiru" aria-label="Warna lilin biru">Warna Lilin Biru</button>
+    <button id="selesai" aria-label="Selesai dekorasi">Selesai</button>
   </div>
-
-  <div class="page" id="page1">
-    <h1>Hai umai 😌</h1>
-    <p>maaf ya aku belum bisa ngasih apa apa , jadi sementara ini dulu ya.. </p>
-    <button onclick="nextPage()">next</button>
+  <div id="instruksiPopup">
+    <h2>🎂 Dekorasi Kue 🎉</h2>
+    <p>Buat kue ultah keren untuk Umai!</p>
+    <p><strong>Cara Bermain:</strong><br>
+    1. Klik/ketuk dan seret untuk memutar kue.<br>
+    2. Klik/ketuk tombol untuk pilih frosting (Merah, Hijau, Biru).<br>
+    3. Klik/ketuk tombol Permata, Bunga, Bintang, atau Cokelat Chip, lalu klik/ketuk kue untuk menempatkan.<br>
+    4. Klik/ketuk dan seret topping/lilin untuk memindahkan posisi.<br>
+    5. Ganti warna topping dengan tombol Warna Topping (Merah, Hijau, Biru).<br>
+    6. Ganti warna lilin dengan tombol Warna Lilin (Putih, Merah, Biru).<br>
+    7. Klik/ketuk "Selesai" untuk simpan kue!</p>
+    <button id="tombolMulaiGame" aria-label="Mulai dekorasi kue">Mulai</button>
   </div>
-
-  <div class="page hidden" id="page2">
-    <h1>Selamat Ulang Tahun! 🎂</h1>
-    <p>
-      Selamat ulang tahun umai semoga panjang umur dan sehat selalu.<br/>
-      jujur aku ga bisa bikin kata kata hehehe maaf yaaa 💕<br/>
-      semoga kamu bisa capai tujuan yang kamu inginkan, dan semoga ga gampang pundung yaa hehe 🌸
-    </p>
-    <button onclick="nextPage()">next</button>
+  <div id="pesanPopup">
+    <h2>🎉 Kue Selesai! 🎂</h2>
+    <p>Pesan Rahasia: Kue ini dibuat dengan cinta untuk Umai 💖</p>
+    <button onclick="ulangPermainan()" aria-label="Dekorasi ulang kue">Coba Lagi</button>
   </div>
+</div>
 
-  <div class="page hidden" id="page3">
-    <h1>Akhir Kata 💌</h1>
-    <p>Happy Birthday sekali lagi, yaa. 💖</p>
-    <button onclick="showSecret()">Lihat Pesan Rahasia 🔐</button>
-    <div id="secret-message" class="hidden">
-      <p>Kalau kamu baca ini... berarti kamu orang yang spesial banget buatku.<br/></p>
-    </div>
-    <button onclick="restart()">restart 🔁</button>
-  </div>
+<script>
+let halamanSekarang = 1;
+let terakhirDiklik = 0;
 
-  <img id="candle" src="https://img.icons8.com/emoji/48/birthday-cake.png"
-    style="position:fixed; right:10px; bottom:10px; cursor:pointer;" onclick="blowCandle()">
+function lanjutHalaman() {
+  const sekarang = Date.now();
+  if (sekarang - terakhirDiklik < 500) return; // Debounce 500ms
+  terakhirDiklik = sekarang;
 
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script>
-    let currentPage = 1;
-    function nextPage() {
-      document.getElementById(`page${currentPage}`).classList.add('hidden');
-      currentPage++;
-      document.getElementById(`page${currentPage}`).classList.remove('hidden');
-      if (currentPage === 1) {
-        confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+  const halamanIni = document.getElementById(`halaman${halamanSekarang}`);
+  if (halamanIni) halamanIni.classList.add('sembunyi');
+  halamanSekarang++;
+  const halamanBerikutnya = document.getElementById(`halaman${halamanSekarang}`);
+  if (halamanBerikutnya) {
+    halamanBerikutnya.classList.remove('sembunyi');
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ff5555', '#55ff55', '#55ffff'] });
+  }
+}
+
+// Event listener hanya untuk tombol
+document.getElementById('tombolLanjut1').addEventListener('click', lanjutHalaman);
+document.getElementById('tombolLanjut2').addEventListener('click', lanjutHalaman);
+document.getElementById('tombolMulai').addEventListener('click', mulaiPermainan);
+
+function mulaiPermainan() {
+  const sekarang = Date.now();
+  if (sekarang - terakhirDiklik < 500) return; // Debounce
+  terakhirDiklik = sekarang;
+
+  document.getElementById('halaman3').classList.add('sembunyi');
+  document.getElementById('halamanPermainan').classList.remove('sembunyi');
+  document.getElementById('instruksiPopup').style.display = 'block';
+}
+
+document.getElementById('tombolMulaiGame').addEventListener('click', () => {
+  document.getElementById('instruksiPopup').style.display = 'none';
+  jalankanPermainan();
+});
+
+function jalankanPermainan() {
+  const kanvas = document.getElementById("kanvasPermainan");
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, kanvas.clientWidth / kanvas.clientHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ canvas: kanvas, antialias: true, alpha: true });
+  renderer.setClearColor(0x000000, 0); // Transparan
+
+  // Responsif
+  function aturUkuranKanvas() {
+    kanvas.width = Math.min(800, window.innerWidth - 40);
+    kanvas.height = Math.min(600, window.innerHeight - 80);
+    renderer.setSize(kanvas.width, kanvas.height);
+    camera.aspect = kanvas.width / kanvas.height;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener("resize", aturUkuranKanvas);
+  aturUkuranKanvas();
+
+  // Pencahayaan
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  directionalLight.position.set(1, 1, 1).normalize();
+  scene.add(directionalLight);
+
+  // Kue 3D ala Minecraft
+  const kueGeo = new THREE.BoxGeometry(1, 1, 1);
+  const kueMat = new THREE.MeshLambertMaterial({ color: 0x5c4033 }); // Brownies
+  const kueBase = new THREE.Mesh(kueGeo, kueMat);
+  const frostingGeo = new THREE.BoxGeometry(0.8, 0.2, 0.8);
+  const frostingMat = new THREE.MeshLambertMaterial({ color: 0xffffff }); // Frosting putih default
+  const frosting = new THREE.Mesh(frostingGeo, frostingMat);
+  frosting.position.y = 0.6;
+  const kue = new THREE.Group();
+  kue.add(kueBase);
+  kue.add(frosting);
+  kue.position.set(0, 0, 0);
+  scene.add(kue);
+
+  camera.position.set(0, 1, 3);
+  camera.lookAt(0, 0, 0);
+
+  let kueData = {
+    group: kue,
+    warna: 0xffffff,
+    topping: [],
+    lilin: []
+  };
+  let dekorasiTerpilih = null;
+  let warnaTopping = 0xff5555; // Default topping: merah
+  let warnaLilin = 0xffffff; // Default lilin: putih
+  let permainanSelesai = false;
+  let isDragging = false;
+  let isRotating = false;
+  let selectedObject = null;
+  let previousMousePosition = { x: 0, y: 0 };
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+
+  function updateMousePosition(event) {
+    const rect = kanvas.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / kanvas.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / kanvas.height) * 2 + 1;
+  }
+
+  // Input mouse
+  kanvas.addEventListener("mousedown", (e) => {
+    updateMousePosition(e);
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects([kue, ...kueData.topping, ...kueData.lilin.map(l => l.lilin)]);
+    if (intersects.length > 0) {
+      const obj = intersects[0].object;
+      if (dekorasiTerpilih && obj === kue) {
+        isDragging = true;
+        placeDecoration(intersects[0].point);
+      } else if (kueData.topping.includes(obj) || kueData.lilin.some(l => l.lilin === obj)) {
+        isDragging = true;
+        selectedObject = obj;
+        console.log("Selected object for dragging:", selectedObject); // Debugging
+      } else {
+        isRotating = true;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+        console.log("Starting rotation"); // Debugging
       }
     }
-    function restart() {
-      document.getElementById(`page${currentPage}`).classList.add('hidden');
-      document.getElementById('secret-message').classList.add('hidden');
-      currentPage = 1;
-      document.getElementById(`page${currentPage}`).classList.remove('hidden');
-      confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
-    }
-    function showSecret() {
-      const secret = document.getElementById('secret-message');
-      secret.classList.remove('hidden');
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-    }
-    function blowCandle() {
-      confetti({ particleCount: 150, spread: 100, origin: { y: 0.7 } });
-      alert("Tiup lilinnyaa 🎂 Semoga semua harapan terkabul!");
-    }
+  });
 
-    const songs = [
-      {
-        title: "🎶 Just The Way You Are – Bruno Mars",
-        url: "https://www.youtube.com/embed/vBy7FaapGRo?autoplay=1&mute=1&loop=1&playlist=vBy7FaapGRo"
-      },
-      {
-        title: "🎶 Perfect – Ed Sheeran",
-        url: "https://www.youtube.com/embed/2Vv-BfVoq4g?autoplay=1&mute=1&loop=1&playlist=2Vv-BfVoq4g"
-      }
-    ];
-    let currentSongIndex = 0;
-    function updateMusic() {
-      const iframe = document.getElementById("music-frame");
-      const title = document.getElementById("music-title");
-      iframe.src = songs[currentSongIndex].url;
-      title.textContent = songs[currentSongIndex].title;
-    }
-    function nextSong() {
-      currentSongIndex = (currentSongIndex + 1) % songs.length;
-      updateMusic();
-    }
-    function prevSong() {
-      currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-      updateMusic();
-    }
-    function manualPlay() {
-      const iframe = document.getElementById("music-frame");
-      // Tambahkan autoplay setelah user klik
-      iframe.src = songs[currentSongIndex].url + "&autoplay=1";
-    }
-
-    function typeEffect(element, speed) {
-      const text = element.innerHTML;
-      element.innerHTML = "";
-      let i = 0;
-      const timer = setInterval(function () {
-        if (i < text.length) {
-          element.append(text.charAt(i));
-          i++;
-        } else {
-          clearInterval(timer);
+  kanvas.addEventListener("mousemove", (e) => {
+    if (isRotating) {
+      const deltaX = e.clientX - previousMousePosition.x;
+      const deltaY = e.clientY - previousMousePosition.y;
+      kueData.group.rotation.y += deltaX * 0.01;
+      kueData.group.rotation.x += deltaY * 0.01;
+      previousMousePosition = { x: e.clientX, y: e.clientY };
+    } else if (isDragging && selectedObject) {
+      updateMousePosition(e);
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(kue);
+      if (intersects.length > 0) {
+        selectedObject.position.copy(intersects[0].point);
+        selectedObject.position.y += 0.6;
+        if (kueData.lilin.some(l => l.lilin === selectedObject)) {
+          const lilin = kueData.lilin.find(l => l.lilin === selectedObject);
+          lilin.api.position.copy(selectedObject.position);
+          lilin.api.position.y += 0.2;
         }
-      }, speed);
+        console.log("Moved object to:", selectedObject.position); // Debugging
+      }
     }
+  });
 
-    window.onload = () => {
-      const h1 = document.querySelector("#page1 h1");
-      const p = document.querySelector("#page1 p");
-      typeEffect(h1, 70);
-      setTimeout(() => typeEffect(p, 40), 1500);
-      updateMusic(); // update pertama
+  kanvas.addEventListener("mouseup", () => {
+    isDragging = false;
+    isRotating = false;
+    selectedObject = null;
+    dekorasiTerpilih = null; // Reset setelah penempatan
+    console.log("Mouse up, reset dragging/rotating"); // Debugging
+  });
+
+  // Input sentuhan
+  let ketukTerakhir = 0;
+  kanvas.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    const sekarang = Date.now();
+    if (sekarang - ketukTerakhir < 300) return; // Debounce
+    ketukTerakhir = sekarang;
+
+    const sentuhan = e.touches[0];
+    updateMousePosition(sentuhan);
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects([kue, ...kueData.topping, ...kueData.lilin.map(l => l.lilin)]);
+    if (intersects.length > 0) {
+      const obj = intersects[0].object;
+      if (dekorasiTerpilih && obj === kue) {
+        isDragging = true;
+        placeDecoration(intersects[0].point);
+        console.log("Touch place decoration:", dekorasiTerpilih, intersects[0].point); // Debugging
+      } else if (kueData.topping.includes(obj) || kueData.lilin.some(l => l.lilin === obj)) {
+        isDragging = true;
+        selectedObject = obj;
+        console.log("Selected object for dragging (touch):", selectedObject); // Debugging
+      } else {
+        isRotating = true;
+        previousMousePosition = { x: sentuhan.clientX, y: sentuhan.clientY };
+        console.log("Starting touch rotation"); // Debugging
+      }
+    }
+  });
+
+  kanvas.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+    const sentuhan = e.touches[0];
+    if (isRotating) {
+      const deltaX = sentuhan.clientX - previousMousePosition.x;
+      const deltaY = sentuhan.clientY - previousMousePosition.y;
+      kueData.group.rotation.y += deltaX * 0.01;
+      kueData.group.rotation.x += deltaY * 0.01;
+      previousMousePosition = { x: sentuhan.clientX, y: sentuhan.clientY };
+    } else if (isDragging && selectedObject) {
+      updateMousePosition(sentuhan);
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(kue);
+      if (intersects.length > 0) {
+        selectedObject.position.copy(intersects[0].point);
+        selectedObject.position.y += 0.6;
+        if (kueData.lilin.some(l => l.lilin === selectedObject)) {
+          const lilin = kueData.lilin.find(l => l.lilin === selectedObject);
+          lilin.api.position.copy(selectedObject.position);
+          lilin.api.position.y += 0.2;
+        }
+        console.log("Moved object (touch) to:", selectedObject.position); // Debugging
+      }
+    }
+  });
+
+  kanvas.addEventListener("touchend", () => {
+    isDragging = false;
+    isRotating = false;
+    selectedObject = null;
+    dekorasiTerpilih = null; // Reset setelah penempatan
+    console.log("Touch end, reset dragging/rotating"); // Debugging
+  });
+
+  function placeDecoration(point) {
+    if (dekorasiTerpilih.startsWith("taburan")) {
+      let geo, mat;
+      if (dekorasiTerpilih === "taburanPermata") {
+        geo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+      } else if (dekorasiTerpilih === "taburanBunga") {
+        geo = new THREE.SphereGeometry(0.1, 8, 8);
+      } else if (dekorasiTerpilih === "taburanBintang") {
+        geo = new THREE.TetrahedronGeometry(0.1);
+      } else if (dekorasiTerpilih === "taburanChip") {
+        geo = new THREE.SphereGeometry(0.05, 8, 8);
+      }
+      mat = new THREE.MeshLambertMaterial({ color: warnaTopping });
+      const topping = new THREE.Mesh(geo, mat);
+      topping.position.copy(point);
+      topping.position.y += 0.6;
+      scene.add(topping);
+      kueData.topping.push(topping);
+      console.log("Topping placed:", dekorasiTerpilih, point); // Debugging
+    } else if (dekorasiTerpilih === "lilin" && kueData.lilin.length < 3) {
+      const lilinGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.3, 8);
+      const lilinMat = new THREE.MeshLambertMaterial({ color: warnaLilin });
+      const lilin = new THREE.Mesh(lilinGeo, lilinMat);
+      lilin.position.copy(point);
+      lilin.position.y += 0.65;
+      scene.add(lilin);
+      const apiGeo = new THREE.SphereGeometry(0.03, 8, 8);
+      const apiMat = new THREE.MeshLambertMaterial({ color: 0xff4500 });
+      const api = new THREE.Mesh(apiGeo, apiMat);
+      api.position.copy(lilin.position);
+      api.position.y += 0.2;
+      scene.add(api);
+      kueData.lilin.push({ lilin, api });
+      console.log("Lilin placed:", point); // Debugging
+    }
+    dekorasiTerpilih = null; // Reset setelah penempatan
+  }
+
+  // Tombol dekorasi
+  document.getElementById("warnaMerah").addEventListener("click", () => { 
+    kueData.warna = 0xff5555; 
+    kueData.group.children[1].material.color.set(kueData.warna); 
+    dekorasiTerpilih = null; 
+    console.log("Frosting merah dipilih"); 
+  });
+  document.getElementById("warnaHijau").addEventListener("click", () => { 
+    kueData.warna = 0x55ff55; 
+    kueData.group.children[1].material.color.set(kueData.warna); 
+    dekorasiTerpilih = null; 
+    console.log("Frosting hijau dipilih"); 
+  });
+  document.getElementById("warnaBiru").addEventListener("click", () => { 
+    kueData.warna = 0x55ffff; 
+    kueData.group.children[1].material.color.set(kueData.warna); 
+    dekorasiTerpilih = null; 
+    console.log("Frosting biru dipilih"); 
+  });
+  document.getElementById("taburanPermata").addEventListener("click", () => { 
+    dekorasiTerpilih = "taburanPermata"; 
+    console.log("Taburan permata dipilih"); 
+  });
+  document.getElementById("taburanBunga").addEventListener("click", () => { 
+    dekorasiTerpilih = "taburanBunga"; 
+    console.log("Taburan bunga dipilih"); 
+  });
+  document.getElementById("taburanBintang").addEventListener("click", () => { 
+    dekorasiTerpilih = "taburanBintang"; 
+    console.log("Taburan bintang dipilih"); 
+  });
+  document.getElementById("taburanChip").addEventListener("click", () => { 
+    dekorasiTerpilih = "taburanChip"; 
+    console.log("Taburan cokelat chip dipilih"); 
+  });
+  document.getElementById("warnaToppingMerah").addEventListener("click", () => { 
+    warnaTopping = 0xff5555; 
+    console.log("Warna topping merah dipilih"); 
+  });
+  document.getElementById("warnaToppingHijau").addEventListener("click", () => { 
+    warnaTopping = 0x55ff55; 
+    console.log("Warna topping hijau dipilih"); 
+  });
+  document.getElementById("warnaToppingBiru").addEventListener("click", () => { 
+    warnaTopping = 0x55ffff; 
+    console.log("Warna topping biru dipilih"); 
+  });
+  document.getElementById("lilin").addEventListener("click", () => { 
+    dekorasiTerpilih = "lilin"; 
+    console.log("Lilin dipilih"); 
+  });
+  document.getElementById("warnaLilinPutih").addEventListener("click", () => { 
+    warnaLilin = 0xffffff; 
+    console.log("Warna lilin putih dipilih"); 
+  });
+  document.getElementById("warnaLilinMerah").addEventListener("click", () => { 
+    warnaLilin = 0xff5555; 
+    console.log("Warna lilin merah dipilih"); 
+  });
+  document.getElementById("warnaLilinBiru").addEventListener("click", () => { 
+    warnaLilin = 0x55ffff; 
+    console.log("Warna lilin biru dipilih"); 
+  });
+  document.getElementById("selesai").addEventListener("click", () => {
+    if (!permainanSelesai) {
+      permainanSelesai = true;
+      document.getElementById("pesanPopup").style.display = "block";
+      confetti({ particleCount: 200, spread: 100, colors: ['#ff5555', '#55ff55', '#55ffff'] });
+      console.log("Permainan selesai");
+    }
+  });
+
+  function perbarui() {
+    if (permainanSelesai) return;
+    kueData.lilin.forEach(l => {
+      l.api.scale.set(1, Math.sin(Date.now() * 0.005) * 0.2 + 0.8, 1);
+    });
+  }
+
+  function jalankanLoop() {
+    if (!permainanSelesai) {
+      perbarui();
+      renderer.render(scene, camera);
+      requestAnimationFrame(jalankanLoop);
+    }
+  }
+
+  function ulangPermainan() {
+    document.getElementById("pesanPopup").style.display = "none";
+    kueData.topping.forEach(t => scene.remove(t));
+    kueData.lilin.forEach(l => { scene.remove(l.lilin); scene.remove(l.api); });
+    kueData = {
+      group: new THREE.Group(),
+      warna: 0xffffff,
+      topping: [],
+      lilin: []
     };
-  </script>
+    const kueGeo = new THREE.BoxGeometry(1, 1, 1);
+    const kueMat = new THREE.MeshLambertMaterial({ color: 0x5c4033 });
+    const kueBase = new THREE.Mesh(kueGeo, kueMat);
+    const frostingGeo = new THREE.BoxGeometry(0.8, 0.2, 0.8);
+    const frostingMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    const frosting = new THREE.Mesh(frostingGeo, frostingMat);
+    frosting.position.y = 0.6;
+    kueData.group.add(kueBase);
+    kueData.group.add(frosting);
+    kueData.group.position.set(0, 0, 0);
+    scene.add(kueData.group);
+    dekorasiTerpilih = null;
+    warnaTopping = 0xff5555;
+    warnaLilin = 0xffffff;
+    permainanSelesai = false;
+    document.getElementById('instruksiPopup').style.display = 'block';
+    console.log("Permainan direset");
+  }
+
+  jalankanLoop();
+}
+</script>
+
 </body>
 </html>
