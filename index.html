@@ -4,31 +4,125 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Selamat Ulang Tahun 💖</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html {
+      font-family: 'Quicksand', sans-serif;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    .background-animation {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(270deg, #ffdde1, #ee9ca7, #ffdde1, #f6d365);
+      background-size: 800% 800%;
+      animation: gradientShift 20s ease infinite;
+      z-index: -1;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .page {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      padding: 2rem;
+      transition: opacity 1s ease;
+    }
+    .page.hidden {
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #e94e77;
+    }
+    p {
+      font-size: 1.2em;
+      color: #333;
+      max-width: 600px;
+    }
+    button {
+      margin-top: 2rem;
+      padding: 0.8rem 2rem;
+      font-size: 1em;
+      background: #e94e77;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #d7426d;
+    }
+    .hidden {
+      display: none;
+    }
+    #secret-message {
+      margin-top: 2rem;
+      background: #fff5f7;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(233, 78, 119, 0.2);
+    }
+    .music-player {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+    .music-info { display: flex; flex-direction: column; }
+    .music-controls { margin-top: 0.4rem; }
+    .music-controls button {
+      background: #e94e77;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 0.3rem 1rem;
+      margin-right: 8px;
+      cursor: pointer;
+      font-size: 0.9em;
+    }
+    .music-controls button:hover { background: #d7426d; }
+  </style>
 </head>
 <body>
-  <!-- Background Spektrum -->
   <div class="background-animation"></div>
 
-  <!-- Music Player Simple -->
   <div class="music-player">
     <div class="music-info">
-      <span id="music-title">🎶 Bruno Mars - Just The Way You Are</span>
+      <span id="music-title">🎶 Just The Way You Are – Bruno Mars</span>
+    </div>
+    <div class="music-controls">
+      <button onclick="prevSong()">⏮️</button>
+      <button onclick="nextSong()">⏭️</button>
     </div>
     <iframe id="music-frame" width="0" height="0"
-      src="https://www.youtube.com/embed/vBy7FaapGRo?autoplay=1&loop=1&playlist=vBy7FaapGRo"
+      src="https://www.youtube.com/embed/vBy7FaapGRo?autoplay=1&mute=1&loop=1&playlist=vBy7FaapGRo"
       frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
     </iframe>
   </div>
 
-  <!-- Page 1 -->
   <div class="page" id="page1">
     <h1>Hai umai 😌</h1>
     <p>maaf ya aku belum bisa ngasih apa apa , jadi sementara ini dulu ya.. </p>
     <button onclick="nextPage()">next</button>
   </div>
 
-  <!-- Page 2 -->
   <div class="page hidden" id="page2">
     <h1>Selamat Ulang Tahun! 🎂</h1>
     <p>
@@ -39,23 +133,94 @@
     <button onclick="nextPage()">next</button>
   </div>
 
-  <!-- Page 3 -->
   <div class="page hidden" id="page3">
     <h1>Akhir Kata 💌</h1>
-    <p>
-      Happy Birthday sekali lagi, yaa. 💖
-    </p>
+    <p>Happy Birthday sekali lagi, yaa. 💖</p>
     <button onclick="showSecret()">Lihat Pesan Rahasia 🔐</button>
     <div id="secret-message" class="hidden">
-      <p>
-        Kalau kamu baca ini... berarti kamu orang yang spesial banget buatku.<br/>
-      </p>
+      <p>Kalau kamu baca ini... berarti kamu orang yang spesial banget buatku.<br/></p>
     </div>
-    <button onclick="restart()">restart</button>
+    <button onclick="restart()">restart 🔁</button>
   </div>
 
-  <!-- Confetti JS -->
+  <img id="candle" src="https://img.icons8.com/emoji/48/birthday-cake.png"
+    style="position:fixed; right:10px; bottom:10px; cursor:pointer;" onclick="blowCandle()">
+
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="script.js"></script>
+  <script>
+    let currentPage = 1;
+    function nextPage() {
+      document.getElementById(`page${currentPage}`).classList.add('hidden');
+      currentPage++;
+      document.getElementById(`page${currentPage}`).classList.remove('hidden');
+      if (currentPage === 1) {
+        confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+      }
+    }
+    function restart() {
+      document.getElementById(`page${currentPage}`).classList.add('hidden');
+      document.getElementById('secret-message').classList.add('hidden');
+      currentPage = 1;
+      document.getElementById(`page${currentPage}`).classList.remove('hidden');
+      confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+    }
+    function showSecret() {
+      const secret = document.getElementById('secret-message');
+      secret.classList.remove('hidden');
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    }
+    function blowCandle() {
+      confetti({ particleCount: 150, spread: 100, origin: { y: 0.7 } });
+      alert("Tiup lilinnyaa 🎂 Semoga semua harapan terkabul!");
+    }
+
+    const songs = [
+      {
+        title: "🎶 Just The Way You Are – Bruno Mars",
+        url: "https://www.youtube.com/watch?v=LjhCEhWiKXkautoplay=1&mute=1&loop=1&playlist=vBy7FaapGRo"
+      },
+      {
+        title: "🎶 Perfect – Ed Sheeran",
+        url: "https://youtu.be/cNGjD0VG4R8?si=_U9rnnqbwVVs7MSgautoplay=1&mute=1&loop=1&playlist=2Vv-BfVoq4g"
+      }
+    ];
+    let currentSongIndex = 0;
+    function updateMusic() {
+      const iframe = document.getElementById("music-frame");
+      const title = document.getElementById("music-title");
+      iframe.src = songs[currentSongIndex].url;
+      title.textContent = songs[currentSongIndex].title;
+    }
+    function nextSong() {
+      currentSongIndex = (currentSongIndex + 1) % songs.length;
+      updateMusic();
+    }
+    function prevSong() {
+      currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+      updateMusic();
+    }
+
+    function typeEffect(element, speed) {
+      const text = element.innerHTML;
+      element.innerHTML = "";
+      let i = 0;
+      const timer = setInterval(function () {
+        if (i < text.length) {
+          element.append(text.charAt(i));
+          i++;
+        } else {
+          clearInterval(timer);
+        }
+      }, speed);
+    }
+
+    window.onload = () => {
+      const h1 = document.querySelector("#page1 h1");
+      const p = document.querySelector("#page1 p");
+      typeEffect(h1, 70);
+      setTimeout(() => typeEffect(p, 40), 1500);
+      updateMusic();
+    };
+  </script>
 </body>
 </html>
