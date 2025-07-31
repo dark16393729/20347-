@@ -26,18 +26,9 @@ function showSecret() {
 // Music
 const songs = [
   {
-    title: "🎶 Best Part – Daniel Caesar ft. H.E.R",
-    url: "https://youtu.be/75-Com9Bo_s?si=fG_QPd5Ldnb7UYE_"
-  },
-  {
     title: "🎶 Just The Way You Are – Bruno Mars",
     url: "https://www.youtube.com/watch?v=LjhCEhWiKXk&pp=0gcJCfwAo7VqN5tD"
-  },
-  {
-    title: "🎶 Perfect – Ed Sheeran",
-    url: "https://youtu.be/cNGjD0VG4R8?si=9pZSzmLiZ-lUWCCH"
   }
-];
 
 let currentSongIndex = 0;
 
