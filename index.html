@@ -52,7 +52,7 @@
       max-width: 600px;
     }
     button {
-      margin-top: 2rem;
+      margin-top: 1rem;
       padding: 0.8rem 2rem;
       font-size: 1em;
       background: #e94e77;
@@ -65,9 +65,7 @@
     button:hover {
       background: #d7426d;
     }
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
     #secret-message {
       margin-top: 2rem;
       background: #fff5f7;
@@ -108,11 +106,12 @@
       <span id="music-title">🎶 Just The Way You Are – Bruno Mars</span>
     </div>
     <div class="music-controls">
+      <button onclick="manualPlay()">🎵 Play Musik</button>
       <button onclick="prevSong()">⏮️</button>
       <button onclick="nextSong()">⏭️</button>
     </div>
     <iframe id="music-frame" width="0" height="0"
-      src="https://www.youtube.com/embed/vBy7FaapGRo?autoplay=1&mute=1&loop=1&playlist=vBy7FaapGRo"
+      src="https://www.youtube.com/embed/vBy7FaapGRo?mute=1&loop=1&playlist=vBy7FaapGRo"
       frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
     </iframe>
   </div>
@@ -177,11 +176,11 @@
     const songs = [
       {
         title: "🎶 Just The Way You Are – Bruno Mars",
-        url: "https://www.youtube.com/watch?v=LjhCEhWiKXkautoplay=1&mute=1&loop=1&playlist=vBy7FaapGRo"
+        url: "https://www.youtube.com/embed/vBy7FaapGRo?autoplay=1&mute=1&loop=1&playlist=vBy7FaapGRo"
       },
       {
         title: "🎶 Perfect – Ed Sheeran",
-        url: "https://youtu.be/cNGjD0VG4R8?si=_U9rnnqbwVVs7MSgautoplay=1&mute=1&loop=1&playlist=2Vv-BfVoq4g"
+        url: "https://www.youtube.com/embed/2Vv-BfVoq4g?autoplay=1&mute=1&loop=1&playlist=2Vv-BfVoq4g"
       }
     ];
     let currentSongIndex = 0;
@@ -198,6 +197,11 @@
     function prevSong() {
       currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
       updateMusic();
+    }
+    function manualPlay() {
+      const iframe = document.getElementById("music-frame");
+      // Tambahkan autoplay setelah user klik
+      iframe.src = songs[currentSongIndex].url + "&autoplay=1";
     }
 
     function typeEffect(element, speed) {
@@ -219,7 +223,7 @@
       const p = document.querySelector("#page1 p");
       typeEffect(h1, 70);
       setTimeout(() => typeEffect(p, 40), 1500);
-      updateMusic();
+      updateMusic(); // update pertama
     };
   </script>
 </body>
